@@ -126,7 +126,7 @@ For request, the library uses a generic handler.
 And We also always respond with the same model
 
 ```cs
-public class ApiResponse
+    public class ApiResponse
     {
         /// <summary>
         /// True if all ok, false if errorMessage needs to be checked
@@ -135,9 +135,21 @@ public class ApiResponse
 
         /// <summary>
         /// An error message, if Success = false
-	/// from ApiErrorMessages object
+        /// from ApiErrorMessages object
         /// </summary>
         public string ErrorMessage { get; set; }
+
+        /// <summary>
+        /// Object of a single item.  be that of class, string int  etc
+        /// used on getdata
+        /// </summary>
+        public object Item { get; set; }
+
+        /// <summary>
+        /// List of items to send. i.e Orders  or string messages
+        /// used on getdata
+        /// </summary>
+        public List<object> Items { get; set; }
     }
 ```
 
