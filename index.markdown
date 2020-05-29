@@ -60,6 +60,27 @@ The client provides some models that provide information directly, if needed.
   // these are the standard messages we send.
   // we provide a list of the message incase you want to check if error.contains(ApiErrorMessages)
   Streetwise.Api.Connect.Models.ApiErrorMessages.GetAll(); // returns list<string>() 
+
+  //For the GetData and SendData endpoints. The urls are from ApiEndpoints
+  // rather than the ApiAuthEndpoints, here are the details
+
+  namespace Streetwise.Api.Connect.Models
+  {
+    public class ApiEndpoints
+    {
+        public const string OnlineOrderCreate = "api/OnlineOrderDetail/Create";
+        public const string CreateOrder = "api/Orders/Create";
+        public const string UpdateOrder = "api/Orders/Update";
+        public const string UpdateOrderStatus = "api/Orders/UpdateStatus";
+
+        public const string UpdateOrderItem = "api/OrderItem/Update";
+        public const string CreateOrderItem = "api/OrderItem/Create";
+
+        public const string AddOrderAddress = "api/OrderAddress/Create";
+        public const string UpdateOrderAddress = "api/OrderAddress/Update";
+    }
+  }
+  
 ```
 
 ## Models
