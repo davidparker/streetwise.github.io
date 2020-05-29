@@ -29,7 +29,7 @@ _authService.RefreshLogin(string existingToken, string storeUrl);
         /// </summary>
         /// <param name="requestModel">request model ( see models )</param>
         /// <param name="storeUrl">Store URL</param>
-        /// <param name="endpoint">Api Endpoint</param>
+        /// <param name="endpoint">ApiEndpoint</param>
         /// <returns>ApiResponse object</returns>
         public async Task<ApiResponse> GetData(RequestModel requestModel, string storeUrl, string endpoint)
 // Posting / sending data to the API
@@ -38,7 +38,7 @@ _authService.RefreshLogin(string existingToken, string storeUrl);
         /// </summary>
         /// <param name="item">object must have a base of BAseModel</param>
         /// <param name="storeUrl">URL for the store, usually in app.config</param>
-        /// <param name="endpoint">the APIEndpoint</param>
+        /// <param name="endpoint">ApiEndpoint</param>
         /// <returns>ApiResponse object</returns>
         public async Task<ApiResponse> SendData(RequestModel requestModel, string storeUrl, string endpoint)
 ```
@@ -144,7 +144,13 @@ For request, the library uses a generic handler.
 ```
 
 #### Response Model
-And We also always respond with the same model
+And We also always respond with the same model.  Check status of success
+if you get a false,  You can check the ValidationErrors for property based issues
+and you can check the ErrorMessage property for other message types.
+
+The Errors in ErrorMessage are detailed in ApiErrorMessages model.
+The ValidationErrors will be subject to change, and are not yet set as const and in a model.
+As soon as validation is settled.  I will create a constants for this, and update the library.
 
 ```cs
     public class ApiResponse
@@ -160,6 +166,11 @@ And We also always respond with the same model
         /// </summary>
         public string ErrorMessage { get; set; }
 
+	/// <summary>
+        /// List errors from property validation
+        /// </summary>
+        public List<ValidationError> ValidationErrors { get; set; }
+
         /// <summary>
         /// Object of a single item.  be that of class, string int  etc
         /// used on getdata
@@ -172,6 +183,24 @@ And We also always respond with the same model
         /// </summary>
         public List<object> Items { get; set; }
     }
+
+    public class ValidationError
+    {
+	/// <summary>
+	/// The name of the property.
+	/// </summary>
+	public string PropertyName { get; set; }
+
+	/// <summary>
+	/// The error message
+	/// </summary>
+	public string ErrorMessage { get; set; }
+
+	/// <summary>
+	/// The property value that caused the failure.
+	/// </summary>
+	public object AttemptedValue { get; set; }
+   }
 ```
 
 
