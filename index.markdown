@@ -390,3 +390,24 @@ public class OnlineOrderDeliveryAddress : BaseIntIdModel
         public string PhoneNumber { get; set; }       
     }
 ```
+
+## Validation
+
+Note that we sanitize all data coming into the API.
+the general rule is this regex: 
+
+```cs
+@"[^\w\.@-]"
+```
+
+It allows letters, number and normal punctuation like spaces.   It is also extended to allow @ . and -
+We do not warn or validate if the property contains an unwanted char, we just sanitize. It is up to the sender
+to make sure that data is not going to loose context, but having invalid charactors.
+
+It is also worth a mention that any email address fields, will be checked, and as such, if the email field
+is not null then the value of that field must validate as an email address string. We will worn about this.
+
+It would be best practice to log all failed responses from the API, in order to ensure that a checker can be created
+on your side, in order to make sure that no orders have been missed.  If the order is corrected, You can re-post for re-validation.
+
+So it would also be prundent to add in the facility to re-send / re-try an order notification.
