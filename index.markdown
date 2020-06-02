@@ -405,7 +405,7 @@ We do not warn or validate if the property contains an unwanted char, we just sa
 to make sure that data is not going to loose context, by having invalid charactors.
 
 It is also worth a mention that any email address fields, will be checked, and as such, if the email field
-is not null then the value of that field must validate as an email address string. We will worn about this.
+is not null then the value of that field must validate as an email address string. We will warn about this.
 
 It would be best practice to log all failed responses from the API, in order to ensure that a checker can be created
 on your side, in order to make sure that no orders have been missed.  If the order is corrected, You can re-post for re-validation.
