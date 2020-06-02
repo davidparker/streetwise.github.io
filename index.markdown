@@ -4,7 +4,7 @@
 
 layout: default
 ---
-## Using the provided library Streetwise.Api.Connect ( recommended )
+## Using the provided library Streetwise.Api.Connect
 
 The library is a .net standard 2.0 library.  and should work in almost any platform
 Install as a reference to NOP or into a nop plugin
@@ -411,3 +411,17 @@ It would be best practice to log all failed responses from the API, in order to 
 on your side, in order to make sure that no orders have been missed.  If the order is corrected, You can re-post for re-validation.
 
 So it would also be prundent to add in the facility to re-send / re-try an order notification.
+
+### Exception / Error Messages
+
+```cs
+	public const string ExpiredLogin = "Token expired, please login again";
+        public const string AccessDenied = "Access Denied";
+        public const string MissingClientId = "ClientId cannot be null";
+        public const string MissingClientSecret = "Client Secret cannot be null";
+        public const string MissingAccessToken = "You must provide an access token";
+        public const string TransportError = "Transport error with status code";
+        public const string NoValidContent = "You must provide either an item, or items";
+        public const string ValidationError = "Please check validation errors for details";
+        public const string GeneralException = "An exception happened, we have logged the details";
+```
