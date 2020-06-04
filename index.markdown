@@ -206,7 +206,7 @@ As soon as validation is settled.  I will create a constants for this, and updat
 
 
 
-## The Streetwise.Api.Connect.Models
+## The Data Models.  Streetwise.Api.Models
 
 In the request model, you will return an object or many objects in the item or items fields
 as it stands we are covering order information.  Below is the model you will use and set to the item property
