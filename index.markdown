@@ -16,31 +16,35 @@ An example below shows how to login and send data to the API using the library
 ### Endpoints
 
 ```cs
-// Your clientid, your token, the store url ending with /slash
-_authService.GetLogin(string clientId, string clientSecret, string storeUrl)
-// example
-_authService.GetLogin("hudnoewihrnl.lcidjoukjfhrwrug", "asjhajshajshjaskjhuwjb7213tevdyuy7ewru", "https:127.0.0.1:8858/")
-// Refresh token  ( TTL is only 10 mins )  if you require access for more than 10 mins, you must refresh the token
-_authService.RefreshLogin(string existingToken, string storeUrl);
-// existingToken is your existing token from the AccessToken property in GetLogin Response ( see models )
-// getting data from the API
+	// Your clientid, your token, the store url ending with /slash
+	_authService.GetLogin(string clientId, string clientSecret, string apiUrl)
+
+	// example
+	_authService.GetLogin("hudnoewihrnl.lcidjoukjfhrwrug", "asjhajshajshjaskjhuwjb7213tevdyuy7ewru", "https:127.0.0.1:8858/")
+
+	// Refresh token  ( TTL is only 10 mins )  if you require access for more than 10 mins, you must refresh the token
+	_authService.RefreshLogin(string existingToken, string apiUrl);
+	// existingToken is your existing token from the AccessToken property in GetLogin Response ( see models )
+
+	// getting data from the API
         /// <summary>
         /// Get items from the api
         /// </summary>
         /// <param name="requestModel">request model ( see models )</param>
-        /// <param name="storeUrl">Store URL</param>
+        /// <param name="apiUrl">URL ending with forward slash</param>
         /// <param name="endpoint">ApiEndpoint</param>
         /// <returns>ApiResponse object</returns>
-        public async Task<ApiResponse> GetData(RequestModel requestModel, string storeUrl, string endpoint)
-// Posting / sending data to the API
+        public async Task<ApiResponse> GetData(RequestModel requestModel, string apiUrl, string endpoint)
+
+        // Posting / sending data to the API
         /// <summary>
         /// Send an item for insert or update
         /// </summary>
         /// <param name="item">object must have a base of BAseModel</param>
-        /// <param name="storeUrl">URL for the store, usually in app.config</param>
+        /// <param name="apiUrl">URL ending with forward slash</param>
         /// <param name="endpoint">ApiEndpoint</param>
         /// <returns>ApiResponse object</returns>
-        public async Task<ApiResponse> SendData(RequestModel requestModel, string storeUrl, string endpoint)
+        public async Task<ApiResponse> SendData(RequestModel requestModel, string apiUrl, string endpoint)
 ```
 
 ## Data
@@ -53,10 +57,12 @@ The client provides some models that provide information directly, if needed.
   Streetwise.Api.Connect.Models.ApiAuthEndpoints
   // example
   string loginUrl = Streetwise.Api.Connect.Models.ApiAuthEndpoints.Login  // output => "api/ApiAuthenticate/Login"
+
   // Details of error messages
   Streetwise.Api.Connect.Models.ApiErrorMessages
   // example
   var error = Streetwise.Api.Connect.Models.ApiErrorMessages.ExpiredLogin // output => "Token expired, please login again"
+
   // these are the standard messages we send.
   // we provide a list of the message incase you want to check if error.contains(ApiErrorMessages)
   Streetwise.Api.Connect.Models.ApiErrorMessages.GetAll(); // returns list<string>() 
@@ -64,14 +70,14 @@ The client provides some models that provide information directly, if needed.
   //For the GetData and SendData endpoints. The urls are from ApiEndpoints
   // rather than the ApiAuthEndpoints, here are the details
 
-  namespace Streetwise.Api.Connect.Models
+  namespace Streetwise.Api.Models
   {
     public class ApiEndpoints
     {
-        public const string OnlineOrderCreate = "api/OnlineOrderDetail/Create";
-        public const string CreateOrder = "api/Orders/Create";
-        public const string UpdateOrder = "api/Orders/Update";
-        public const string UpdateOrderStatus = "api/Orders/UpdateStatus";
+        public const string PostOnlineOrderDetail = "api/OnlineOrderDetail/Create";
+
+        public const string CreateOrder = "api/Order/Create";
+        public const string UpdateOrder = "api/Order/Update";
 
         public const string UpdateOrderItem = "api/OrderItem/Update";
         public const string CreateOrderItem = "api/OrderItem/Create";
@@ -132,14 +138,9 @@ For request, the library uses a generic handler.
     public class RequestModel : BaseModel
     {
         /// <summary>
-        /// Object of a single item.  be that of class, string int  etc
+        /// Serialize your data and add the output into the Data property
         /// </summary>
-        public object Item { get; set; }
-
-        /// <summary>
-        /// List of items to send. i.e Orders  or string messages
-        /// </summary>
-        public List<object> Items { get; set; }
+        public string Data { get; set; }
     }
 ```
 
@@ -211,7 +212,7 @@ In the request model, you will return an object or many objects in the item or i
 as it stands we are covering order information.  Below is the model you will use and set to the item property
 I have also included a breakdown of the types used in that model for clarity.
 
-#### Streetwise.Api.Connect.Models.OnlineOrders
+#### Streetwise.Api.Models.OnlineOrderDetail
 ```cs
     /// <summary>
     /// Basket / Online order information model
@@ -221,32 +222,26 @@ I have also included a breakdown of the types used in that model for clarity.
         /// <summary>
         /// OnlineOrder object
         /// </summary>
-        public OnlineOrder OrderDetails { get; set; }
+        public OnlineOrderDto OrderDetails { get; set; }
         
         /// <summary>
         /// List of OnlineOrderItems
         /// </summary>
-        public ICollection<OnlineOrderItems> OrderItems { get; set; }
+        public ICollection<OnlineOrderItemsDto> OrderItems { get; set; }
 
         /// <summary>
         /// Delivery address for this order
         /// </summary>
-        public OnlineOrderDeliveryAddress DeliveryAddress { get; set; }
+        public OnlineOrderDeliveryAddressDto DeliveryAddress { get; set; }
 
     }
 ```
 
-#### Streetwise.Api.Connect.Models.OnlineOrder
+#### Streetwise.Api.Models.OnlineOrderDto
 ```cs
-public class OnlineOrder : BaseIntIdModel
-    {
-        /// <summary>
-        /// The location order be dispatched from
-        /// </summary>
-        public string LocationCode { get; set; }
-        
-        /// <summary>
+/// <summary>
         /// The order number / NOP Order GUID
+        /// REQUIRED
         /// </summary>
         public string OrderNo { get; set; }
         
@@ -257,11 +252,13 @@ public class OnlineOrder : BaseIntIdModel
         
         /// <summary>
         /// The date the order was created
+        /// REQUIRED
         /// </summary>
         public DateTime OrderDate { get; set; }
         
         /// <summary>
         /// Customer GUID in nop   or ID to string in others
+        /// REQUIRED
         /// </summary>
         public string CustomerGuid { get; set; }
         
@@ -273,79 +270,85 @@ public class OnlineOrder : BaseIntIdModel
 
         /// <summary>
         /// If customer is actually a member of staff
+        /// REQUIRED
         /// </summary>
         public bool IsStaffMember { get; set; }
 
         /// <summary>
         /// Delivery charge, if none set 0
+        /// REQUIRED
         /// </summary>
         public decimal DeliveryCharge { get; set; }
 
         /// <summary>
         /// The total and final value for the order. i.e Amount customer has paid
+        /// REQUIRED
         /// </summary>
         public decimal TotalOrderValue { get; set; }
-    }
 ``` 
 
-#### Streetwise.Api.Connect.Models.OnlineOrderItems
+#### Streetwise.Api.Models.OnlineOrderItemsDto
 ```cs
-public class OnlineOrderItems : BaseIntIdModel
-    {
-        /// <summary>
+/// <summary>
         /// The order number field in OnlineOrders   NOP order GUID
+        /// REQUIRED
         /// </summary>
         public string OrderNo { get; set; }
 
         /// <summary>
         /// Streetwise Product Code
+        /// REQUIRED  Streetwise ProdCode
         /// </summary>
         public string ProductCode { get; set; }
         
         /// <summary>
         /// Qty requested in the order row
+        /// REQUIRED
         /// </summary>
         public int QtyRequired { get; set; }
                         
         /// <summary>
         /// Price the customer paid
+        /// REQUIRED
         /// </summary>
         public decimal PurchasePrice { get; set; }
         
         /// <summary>
         /// The ID of the order row item, in relation to sending store
+        /// REQUIRED
         /// </summary>
         public string OrderRowId { get; set; }
         
         /// <summary>
         /// The price it would normally sell for
+        /// REQUIRED
         /// </summary>
         public decimal StandardSellingPrice { get; set; }
         
         /// <summary>
         /// The promotion used on this order item
         /// </summary>
-        public string PromitionId { get; set; }
-    }
+        public string PromotionId { get; set; }
 ```
 
-#### Streetwise.Api.Connect.Models.OnlineOrderDeliveryAddress
+#### Streetwise.Api.Models.OnlineOrderDeliveryAddressDto
 
 ```cs
-public class OnlineOrderDeliveryAddress : BaseIntIdModel
-    {
-        /// <summary>
+/// <summary>
         /// Gets or sets the first name
+        /// REQUIRED
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name
+        /// REQUIRED
         /// </summary>
         public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email
+        /// if not null, must be valid email address
         /// </summary>
         public string Email { get; set; }
 
@@ -366,6 +369,7 @@ public class OnlineOrderDeliveryAddress : BaseIntIdModel
 
         /// <summary>
         /// Gets or sets the address 1
+        /// REQUIRED
         /// </summary>
         public string Address1 { get; set; }
 
@@ -376,6 +380,7 @@ public class OnlineOrderDeliveryAddress : BaseIntIdModel
 
         /// <summary>
         /// Gets or sets the zip/postal code
+        /// REQUIRED
         /// </summary>
         public string ZipPostalCode { get; set; }
 
@@ -388,7 +393,6 @@ public class OnlineOrderDeliveryAddress : BaseIntIdModel
         /// Gets or sets the phone number
         /// </summary>
         public string PhoneNumber { get; set; }       
-    }
 ```
 
 ## Validation
