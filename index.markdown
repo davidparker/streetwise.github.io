@@ -294,6 +294,12 @@ I have also included a breakdown of the types used in that model for clarity.
         /// REQUIRED
         /// </summary>
         public decimal TotalOrderValue { get; set; }
+
+        /// <summary>
+        /// Numeric order number for display reasons
+        /// REQUIRED
+        /// </summary>
+        public int OrderNumber { get; set; }
 ``` 
 
 #### Streetwise.Api.Models.OnlineOrderItemsDto
