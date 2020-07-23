@@ -76,6 +76,7 @@ The client provides some models that provide information directly, if needed.
     {
         public const string PostOnlineOrderDetail = "api/OnlineOrderDetail/Create";
 
+
         public const string CreateOrder = "api/Order/Create";
         public const string UpdateOrder = "api/Order/Update";
 
@@ -84,6 +85,14 @@ The client provides some models that provide information directly, if needed.
 
         public const string AddOrderAddress = "api/OrderAddress/Create";
         public const string UpdateOrderAddress = "api/OrderAddress/Update";
+               
+        // Exporting Endpoints.  can be used with Streetwise.Api.Connect.ApiAccessService.GetData
+        public const string GetProductChanges = "api/ExportProduct/GetProductChanges";
+        public const string GetAllProductsExport = "api/ExportProduct/GetAll";
+        public const string ExportCategories = "api/ExportCategory/GetAll";
+        public const string ExportPrices = "api/ExportPrice/GetAll";
+        public const string ExportPromotions = "api/ExportPromotion/GetForLocation";
+        public const string ExportStock = "api/ExportStock/GetAll";
     }
   }
   
