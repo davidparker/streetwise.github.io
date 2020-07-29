@@ -75,17 +75,8 @@ The client provides some models that provide information directly, if needed.
     public class ApiEndpoints
     {
         public const string PostOnlineOrderDetail = "api/OnlineOrderDetail/Create";
-
-
-        public const string CreateOrder = "api/Order/Create";
-        public const string UpdateOrder = "api/Order/Update";
-
-        public const string UpdateOrderItem = "api/OrderItem/Update";
-        public const string CreateOrderItem = "api/OrderItem/Create";
-
-        public const string AddOrderAddress = "api/OrderAddress/Create";
-        public const string UpdateOrderAddress = "api/OrderAddress/Update";
-               
+        public const string FinalOrderConfirm = "api/OnlineOrderDetail/FinalOrderConfirm";
+                                       
         // Exporting Endpoints.  can be used with Streetwise.Api.Connect.ApiAccessService.GetData
         public const string GetProductChanges = "api/ExportProduct/GetProductChanges";
         public const string GetAllProductsExport = "api/ExportProduct/GetAll";
@@ -300,6 +291,12 @@ I have also included a breakdown of the types used in that model for clarity.
         /// REQUIRED
         /// </summary>
         public int OrderNumber { get; set; }
+
+        /// <summary>
+        /// Location that the order has been created for delivery from
+        /// REQUIRED
+        /// </summary>
+        public string LocationCode { get; set; }
 ``` 
 
 #### Streetwise.Api.Models.OnlineOrderItemsDto
@@ -440,7 +437,11 @@ So it would also be prundent to add in the facility to re-send / re-try an order
         public const string MissingClientSecret = "Client Secret cannot be null";
         public const string MissingAccessToken = "You must provide an access token";
         public const string TransportError = "Transport error with status code";
-        public const string NoValidContent = "You must provide either an item, or items";
+        public const string NoValidContent = "You must provide content in the data field";
         public const string ValidationError = "Please check validation errors for details";
         public const string GeneralException = "An exception happened, we have logged the details";
+        public const string OrderItemNotExist = "Order item with OrderRowId {{ID}} does not exist";
+        public const string OrderItemCannotBeEdited = "Order item with OrderRowId {{ID}} cannot be edited due to status";
+        public const string OrderCannotBeFound = "Order with ID {{ID}} cannot be found for updating";
+        public const string OrderCannotBeEdited = "Order with ID {{ID}} cannot be edited due to current status";
 ```
