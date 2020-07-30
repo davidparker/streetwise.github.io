@@ -76,7 +76,11 @@ The client provides some models that provide information directly, if needed.
     {
         public const string PostOnlineOrderDetail = "api/OnlineOrderDetail/Create";
         public const string FinalOrderConfirm = "api/OnlineOrderDetail/FinalOrderConfirm";
-                                       
+        public const string CancelOrder = "api/OnlineOrderDetail/CancelOrder";
+        public const string CancelOrderItems = "api/OnlineOrderDetail/CancelOrderItems";
+        public const string RefundOrder = "api/OnlineOrderDetail/RefundOrder";
+        public const string RefundOrderItem = "api/OnlineOrderDetail/RefundOrderItem";
+
         // Exporting Endpoints.  can be used with Streetwise.Api.Connect.ApiAccessService.GetData
         public const string GetProductChanges = "api/ExportProduct/GetProductChanges";
         public const string GetAllProductsExport = "api/ExportProduct/GetAll";
@@ -297,6 +301,13 @@ I have also included a breakdown of the types used in that model for clarity.
         /// REQUIRED
         /// </summary>
         public string LocationCode { get; set; }
+
+        /// <summary>
+        /// This is for the special code, that is then turned into a barcode
+        /// for the delivery slip / sticker.   The barcode points to the address
+        /// when scanned by compatable devices
+        /// </summary>
+        public string DeliveryReferenceCode { get; set; }
 ``` 
 
 #### Streetwise.Api.Models.OnlineOrderItemsDto
@@ -407,6 +418,79 @@ I have also included a breakdown of the types used in that model for clarity.
         public string PhoneNumber { get; set; }       
 ```
 
+## For new refund and cancellations
+
+#### Streetwise.Api.Models.OrderReferenceHeader
+
+```cs
+    public class OrderReferenceHeader
+    {
+        public string OrderGuid { get; set; }
+        public int OrderId { get; set; }
+        public decimal DeliveryCharge { get; set; }
+        public decimal TotalOrderValue { get; set; }
+
+
+        /// <summary>
+        /// Note that for refunds, the qty and price needs to be the amount and qty to refund
+        /// and not what the new row will be equal to
+        /// </summary>
+        public List<OrderReferenceItem> Items { get; set; }
+    }
+```
+
+#### Streetwise.Api.Models.OrderReferenceItem
+
+```cs
+    public class OrderReferenceItem
+    {
+       public int QtyRequired { get; set; }
+       public decimal PurchasePrice { get; set; }
+       public string OrderRowId { get; set; }
+    }
+```
+
+## Refunds And Cancellations
+
+There are now new endpoints for this.  Takes in a OrderReferenceHeader as the data.
+by TotalOrderValue.  this should be including the delivery charge
+
+1.  Can Cancel whole order.   Must contain order items
+2.  Can Cancel Order item ( not partial )  Must include order header new total as it should be now, and delivery.
+3.  Can refund whole order,  must contain order items
+4.  Can Refund and partially refund a orderItem.   Must include order TotalOrderValue and delivery.
+
+We Will and do check that the order total matches the order total we expect.  We do this by calculating
+the valid rows for the order ( not cancelled or refunded )   and then check if the calculated value + delivery = TotalOrderValue.
+
+If this fails, we dont save anything.    We also have the folowing rules:
+
+### Cancellation status:
+
+```cs
+    var validOrderStatus = new List<int> { 
+        (int)OrderStatus.New, 
+        (int)OrderStatus.ToTransfer, 
+        (int)OrderStatus.Transfered,
+        (int)OrderStatus.PickingComplete
+    };
+
+    // set status allowed for cancel
+    var validOrderItemStatus = new List<int>
+    {
+        (int)OrderItemStatus.ToPick,
+        (int)OrderItemStatus.ToTransfer,
+        (int)OrderItemStatus.Transfered,
+        (int)OrderItemStatus.PickingComplete
+    };
+```
+
+### Refund Status
+
+Order and order items must be in a state of completed.
+
+
+
 ## Validation
 
 Note that we sanitize all data coming into the API.
@@ -431,7 +515,7 @@ So it would also be prundent to add in the facility to re-send / re-try an order
 ### Exception / Error Messages
 
 ```cs
-	public const string ExpiredLogin = "Token expired, please login again";
+	    public const string ExpiredLogin = "Token expired, please login again";
         public const string AccessDenied = "Access Denied";
         public const string MissingClientId = "ClientId cannot be null";
         public const string MissingClientSecret = "Client Secret cannot be null";
@@ -444,4 +528,11 @@ So it would also be prundent to add in the facility to re-send / re-try an order
         public const string OrderItemCannotBeEdited = "Order item with OrderRowId {{ID}} cannot be edited due to status";
         public const string OrderCannotBeFound = "Order with ID {{ID}} cannot be found for updating";
         public const string OrderCannotBeEdited = "Order with ID {{ID}} cannot be edited due to current status";
+        public const string InvalidOrMissingOrder = "Order is invalid or null";
+        public const string AddressMissing = "The delivery address is missing";
+        public const string NoOrderItemsPresent = "An order must have order items";
+        public const string OrderValueZero = "An order must have a total value more than zero";
+        public const string OrderTotalMisMatch = "Order total, does not match with order items.  item.Qty*item.PurchasePrice = RowTotal.";
+        public const string OrderCannotBeRefunded = "Order {{ID}} cannot be refunded as it is not yet completed.";
+        public const string OrderItemCannotBeRefunded = "Order item {{ID}} cannot be refunded as it is not yet completed";
 ```
