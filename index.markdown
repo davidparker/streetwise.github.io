@@ -11,6 +11,9 @@ Install as a reference to NOP or into a nop plugin
 
 An example below shows how to login and send data to the API using the library
 
+### NOTE:   Code provided here is example code for Streetwise.Api.Connect client usage only, and is not to be treated as production ready
+```It is the developers responsibility to ensure there code is correct and that data passed has been validated```
+
 <script src="https://gist.github.com/davidparker/1ff154061d715cfd7636f4ac8b935834.js" height="200"></script>
 
 ### Endpoints
