@@ -311,6 +311,18 @@ I have also included a breakdown of the types used in that model for clarity.
         /// when scanned by compatable devices
         /// </summary>
         public string DeliveryReferenceCode { get; set; }
+
+        /// <summary>
+        /// true if age restricted products in order
+        /// Required
+        /// </summary>
+        public bool IsAgeVerificationRequired { get; set; }
+
+        /// <summary>
+        /// true if online verification has been carried out
+        /// Required
+        /// </summary>
+        public bool HasAgeBeenVerified { get; set; }
 ``` 
 
 #### Streetwise.Api.Models.OnlineOrderItemsDto
