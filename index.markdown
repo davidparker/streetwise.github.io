@@ -433,6 +433,36 @@ I have also included a breakdown of the types used in that model for clarity.
         public string PhoneNumber { get; set; }       
 ```
 
+## Final Order Confirmation.
+
+Final order confirmation is the same data and models as the Order.   However you are sending to the endpoint
+
+``` public const string FinalOrderConfirm = "api/OnlineOrderDetail/FinalOrderConfirm"; ```
+
+All the endpoints for sending data work in the same way.  You have to post the RequestModel to the correct Endpoint
+with the data.   Please see emails for more details  (subject Updates And Changes )   31/07/2020.
+
+```
+A FinalOrderConfirmation is in order to send us updates with regards to any changes made after picking, and price changes.
+as less qty etc could result in a seperate total and seperate delivery charge.
+
+The Endpoint is different so that we can detect between an order UPdate and an order create.   And also so we can set the right status
+at the right time during the workflow.
+```
+
+``` cs
+\\ As a reminder.  here is an example of how to send data, including finalOrderNotification to Streetwise.APi
+        // Posting / sending data to the API
+        /// <summary>
+        /// Send an item for insert or update
+        /// </summary>
+        /// <param name="item">object must have a base of BAseModel</param>
+        /// <param name="apiUrl">URL ending with forward slash</param>
+        /// <param name="endpoint">ApiEndpoint</param>
+        /// <returns>ApiResponse object</returns>
+        public async Task<ApiResponse> SendData(RequestModel requestModel, string apiUrl, string endpoint)
+```
+
 ## For new refund and cancellations
 
 #### Streetwise.Api.Models.OrderReferenceHeader
