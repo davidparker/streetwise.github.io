@@ -444,7 +444,7 @@ with the data.   Please see emails for more details  (subject Updates And Change
 
 ```
 A FinalOrderConfirmation is in order to send us updates with regards to any changes made after picking, and price changes.
-as less qty etc could result in a seperate total and seperate delivery charge.
+as less qty etc could result in a separate total and separate delivery charge.
 
 The Endpoint is different so that we can detect between an order UPdate and an order create.   And also so we can set the right status
 at the right time during the workflow.
