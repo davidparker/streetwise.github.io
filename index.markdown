@@ -98,6 +98,21 @@ The client provides some models that provide information directly, if needed.
 
 ## Models
 
+#### Login Request
+
+```cs
+    public class LoginModel
+    {
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+    }
+
+    JSON: {
+	"clientId" : "Your CLient Id", 
+	"clientSecret" : "Your Client Secret" 
+    }
+```
+
 #### Login Response
 We return this model when you call the Login endpoint
 this is the type returned on good or bad login
@@ -127,6 +142,13 @@ This is also the response from RefreshLogin
         /// </summary>
         public bool IsSuccess { get; set; }
     }
+
+    JSON: {
+       "accessToken" : "",
+       "expires" : "",
+       "errorMessage" : "",
+       "isSuccess" : "false"
+    }
 ```
 
 #### Request Model
@@ -148,6 +170,11 @@ For request, the library uses a generic handler.
         /// Serialize your data and add the output into the Data property
         /// </summary>
         public string Data { get; set; }
+    }
+
+    JSON: {
+	"accessToken" : "Your access token",
+        "data" : "Your object convert to json string object"
     }
 ```
 
@@ -191,6 +218,14 @@ As soon as validation is settled.  I will create a constants for this, and updat
         /// </summary>
         public List<object> Items { get; set; }
     }
+ 
+    JSON: {
+       "success" : "false",
+       "errorMessage" : "",
+       "validationErrors" : [],
+       "item" : "no longer used",
+       "items" : ["no longer used", "no longer used"]
+    }
 
     public class ValidationError
     {
@@ -208,6 +243,12 @@ As soon as validation is settled.  I will create a constants for this, and updat
 	/// The property value that caused the failure.
 	/// </summary>
 	public object AttemptedValue { get; set; }
+   }
+
+   JSON : {
+	"propertyName" : "",
+	"errorMessage" : "",
+	"attemptedValue: ""
    }
 ```
 
@@ -241,6 +282,12 @@ I have also included a breakdown of the types used in that model for clarity.
         /// </summary>
         public OnlineOrderDeliveryAddressDto DeliveryAddress { get; set; }
 
+    }
+
+    JSON: {
+	"orderDetails" : OnlineOrderDto,
+        "orderItems" : [OnlineOrderItemsDto, OnlineOrderItemsDto, OnlineOrderItemsDto],
+	"deliveryAddress" : OnlineOrderDeliveryAddressDto
     }
 ```
 
@@ -340,6 +387,25 @@ I have also included a breakdown of the types used in that model for clarity.
         /// Date order was marked as delivered
         /// </summary>
         public DateTime? DeliveryDate { get; set; }
+
+	JSON : {
+		"orderNo" : "",
+		"memberCode" : 0,
+		"orderDate": "2020/09/09 12:24:36",
+		"customerGuid" : "",
+		"notes" : "",
+		"isStaffMember" : false,
+		"deliveryCharge" : 0,
+		"totalOrderValue" : 0,
+		"orderNumber" : 0,
+		"locationCode" : "0024"
+		"deliveryReferenceCode" : "",
+		"isAgeVerificationRequired" : false,
+		"hasAgeBeenVerified" : false,
+		"staffDiscount" : 0,
+		"couponValue" : 0,
+		"deliveryDate" : null
+	}
 ``` 
 
 #### Streetwise.Api.Models.OnlineOrderItemsDto
@@ -384,6 +450,16 @@ I have also included a breakdown of the types used in that model for clarity.
         /// The promotion used on this order item
         /// </summary>
         public string PromotionId { get; set; }
+
+	JSON : {
+		"orderNo" : "",
+		"productCode" : "",
+		"qtyRequired" : "",
+		"purchasePrice" : "",
+		"orderRowId" : "",
+		"standardSellingPrice" : 0,
+		"promotionId" : ""
+	}
 ```
 
 #### Streetwise.Api.Models.OnlineOrderDeliveryAddressDto
@@ -447,7 +523,21 @@ I have also included a breakdown of the types used in that model for clarity.
         /// <summary>
         /// Gets or sets the phone number
         /// </summary>
-        public string PhoneNumber { get; set; }       
+        public string PhoneNumber { get; set; }      
+
+	JSON : {
+		"firstName" : "",
+		"lastName" : "",
+		"email" : "",
+		"company" : "",
+		"county" : "",
+		"city" : "",
+		"address1" : "",
+		"address2" : "",
+		"zipPostalCode" : "",
+		"country" : "",
+		"phoneNumber" : ""
+	} 
 ```
 
 ## Final Order Confirmation.
@@ -499,6 +589,14 @@ at the right time during the workflow.
         /// </summary>
         public List<OrderReferenceItem> Items { get; set; }
     }
+
+	JSON : {
+		"orderGuid" : "",
+		"orderId: 0,
+		"deliveryCharge" : 0,
+		"totalOrderValue" : 0,
+		"items: [OrderReferenceItem, OrderReferenceItem, OrderReferenceItem]
+	}
 ```
 
 #### Streetwise.Api.Models.OrderReferenceItem
@@ -510,6 +608,12 @@ at the right time during the workflow.
        public decimal PurchasePrice { get; set; }
        public string OrderRowId { get; set; }
     }
+
+	JSON : {
+		"qtyRequired" : 0,
+		"purchasePrice" : 0,
+		"orderRowId" : ""   	
+	}
 ```
 
 ## Refunds And Cancellations
