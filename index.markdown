@@ -246,7 +246,7 @@ I have also included a breakdown of the types used in that model for clarity.
 
 #### Streetwise.Api.Models.OnlineOrderDto
 ```cs
-/// <summary>
+         /// <summary>
         /// The order number / NOP Order GUID
         /// REQUIRED
         /// </summary>
@@ -323,6 +323,23 @@ I have also included a breakdown of the types used in that model for clarity.
         /// Required
         /// </summary>
         public bool HasAgeBeenVerified { get; set; }
+
+        /// <summary>
+        /// Staff Discount Value
+        /// Required
+        /// </summary>
+        public decimal StaffDiscount { get; set; }
+
+        /// <summary>
+        /// Discount Coupon Value
+        /// Required
+        /// </summary>
+        public decimal CouponValue { get; set; }
+
+        /// <summary>
+        /// Date order was marked as delivered
+        /// </summary>
+        public DateTime? DeliveryDate { get; set; }
 ``` 
 
 #### Streetwise.Api.Models.OnlineOrderItemsDto
